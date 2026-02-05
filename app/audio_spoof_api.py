@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 # Global variables
 model_loaded = True
-VALID_API_KEY = "your-secret-api-key-here"  # Change this in production
+VALID_API_KEY = "0ba1ed82-753b-4182-a92d-11e009277d68"  # Change this in production
 
 # Request Model
 class DetectionRequest(BaseModel):
