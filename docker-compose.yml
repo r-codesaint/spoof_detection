@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+    spoof_app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: spoof_app
+        restart: unless-stopped
+        environment:
+            - PYTHONUNBUFFERED=1
+            - VALID_API_KEY=your-secret-api-key-here
+        volumes:
+            - ./app:/app:ro
+            - ./app/pretrained_models:/app/pretrained_models:ro
+        expose:
+            - "8000"
+        networks:
+            - proxy-tier
+
+    nginx-proxy-manager:
+        image: jc21/nginx-proxy-manager:latest
+        container_name: nginx-proxy-manager
+        restart: unless-stopped
+        ports:
+            - "80:80"    # HTTP
+            - "81:81"    # Admin UI
+            - "443:443"  # HTTPS
+        environment:
+            - DB_SQLITE_FILE=/data/database.sqlite
+        volumes:
+            - ./nginx/data:/data
+            - ./nginx/letsencrypt:/etc/letsencrypt
+        networks:
+            - proxy-tier
+
+networks:
+    proxy-tier:
+        driver: bridge
